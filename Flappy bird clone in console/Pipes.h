@@ -10,37 +10,28 @@ class Pipes {
 	Map* map;
 	int WIDTH;
 	int HEIGHT;
-	int pipePosition;
 	int pipeSize;
-
-	bool isPipe;
-
-	Pipe* pipe;
+	int* score;
 
 	std::vector<Pipe*> pipes;
 
-
-
 public:
 
-	Pipes(Map* m) : map(m) {
+	Pipes(Map* m,int* s) : map(m),score(s) {
 		WIDTH = map->WIDTH;
 		HEIGHT = map->HEIGHT;
 
-		pipePosition = WIDTH-1;
 		pipeSize = 3;
-		isPipe = 0;
-		pipe = NULL;
 	}
 
 	void makePipes() {
 
 		if (pipes.empty()) {
-			pipes.push_back(new Pipe(map));
+			pipes.push_back(new Pipe(map,pipeSize,score));
 		}
 
 		if (pipes[pipes.size() - 1]->returnPosition() < WIDTH - pipeSize*6) {
-			pipes.push_back(new Pipe(map));
+			pipes.push_back(new Pipe(map,pipeSize,score));
 		}
 
 		for (int i = 0; i < pipes.size();) {
@@ -53,21 +44,6 @@ public:
 				++i;
 			}
 		}
-
-
-
-
-		/*if (pipe == NULL) {
-			pipe = new Pipe(map);
-		}
-		else {
-			if (!pipe->pipeMove()) {
-				delete pipe;
-				pipe = nullptr;
-				pipe = new Pipe(map);
-			}
-		}*/
-
 	}
 
 	~Pipes() {

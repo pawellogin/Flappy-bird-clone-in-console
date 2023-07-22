@@ -1,11 +1,11 @@
-#define NOMIMAX
 #pragma once
 #include <Windows.h>
 #include <chrono>
 #include <thread>
+#include "Map.h"
 
 class Bird {
-	std::vector<std::vector<int>>* matrix;
+	Map* map;
 	
 	std::chrono::time_point<std::chrono::high_resolution_clock> timeStart;
 
@@ -14,58 +14,70 @@ class Bird {
 	bool isSpacePressed;
 	float fallAcceleration;
 	float jumpPower;
+	int jumpDelay; //in ms
 	
 public:
 	float x;
 	float y;
 
-	Bird(std::vector<std::vector<int>>* m) : matrix(m) {
-		velocity = 0;
-		isSpacePressed = 0;
+	Bird(Map* m) : map(m) {
 		MAX_VELOCITY = 1;
 		fallAcceleration = 0.2;
 		jumpPower = 5;
+		jumpDelay = 100;
+
 		x = 5;
 		y = 5;
+		velocity = 0;
+		isSpacePressed = 0;
 
 		timeStart = std::chrono::high_resolution_clock::now();
 	}
 
-	void fall() {
+	bool fall() {
 		if (velocity < MAX_VELOCITY) {
 			velocity += fallAcceleration;
 		}
+
 		if (velocity > MAX_VELOCITY) {
 			velocity = MAX_VELOCITY;
 		}
+
 		if (velocity < -MAX_VELOCITY) {
 			velocity = -MAX_VELOCITY;
 		}
 
-		if (y < (*matrix).size() - 1) {
 			y += velocity;
+	
+		if (y > map->HEIGHT - 2) {
+			return 0;
 		}
-		if (y > (*matrix).size() - 2) {
-			y = (*matrix).size() - 3;
-		}
+
 		if (y < 0) {
-			y = 0;
+			return 0;
 		}
+
+		return 1;
 	}
 
-	void fly() {
+	bool fly() {
 		isSpacePressed = GetAsyncKeyState(VK_SPACE) & 0x8000;
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - timeStart).count();
 
-		if (deltaTime >= 100) {
-				if (isSpacePressed && y > 6) {
+		if (deltaTime >= jumpDelay) {
+				if (isSpacePressed) {
 					velocity -= jumpPower;
 				}
 
 			timeStart = currentTime;
-			return;
-		}		
+			
+			if (y <= 0) {
+				return 0;
+			}
+
+		}
+		return 1;
 	}
 };

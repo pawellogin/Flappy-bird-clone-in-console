@@ -3,15 +3,24 @@
 
 class Pipe {
 	Map* map;
+
 	int WIDTH;
 	int HEIGHT;
-	int pipePosition;
+
+	int* score;
+
+	float pipePosition;
 	int pipeSize;
-	int gap;
+	float pipeSpeed;
+
+	int gapPosition;
+	int gapSizeHalf;
+
 	float genOffset;
 
 public:
-	Pipe(Map* m) : map(m) {
+	Pipe(Map* m,int pSize,int* s,float speed =0.5,int halfGapSize =3) : map(m), pipeSize(pSize),score(s), pipeSpeed(speed),gapSizeHalf(halfGapSize) {
+
 		genOffset = 0.2;
 		WIDTH = map->WIDTH;
 		HEIGHT = map->HEIGHT;
@@ -21,25 +30,25 @@ public:
 
 		std::uniform_int_distribution<int> distribution(genOffset * HEIGHT, (1-genOffset) * HEIGHT);
 
-		gap = distribution(gen);
+		gapPosition = distribution(gen);
+		gapSizeHalf = 3;
 
 		pipePosition = WIDTH - 1;
-		pipeSize = 3;
 	}
 
 	~Pipe(){
-		
+		(*score)+=1;
 	}
 
 	bool pipeMove() {
 		for (int i = pipePosition; i > pipePosition - pipeSize; i--) {
 			for (int k = 0; k < HEIGHT; k++) {
-				if (!((k >= gap-0.1*HEIGHT) && (k<= gap+0.1*HEIGHT))) {
+				if (!((k >= gapPosition-gapSizeHalf) && (k<= gapPosition+gapSizeHalf))) {
 					map->placePixel(i, k, 102);
 				}
 			}
 		}
-		pipePosition -= 1;
+		pipePosition -= pipeSpeed;
 		if (pipePosition - 2 < 0) {
 			pipePosition = WIDTH - 1;
 			return 0;
