@@ -10,11 +10,10 @@ int main() {
 	const int WIDTH = 50;
 
 	Map map(HEIGHT, WIDTH);
-	Display display(map.returnPointerMap());
+	Display display(&map);
 	Bird bird(map.returnPointerMap());
 	Fps fps;
 
-	//Pipes pipes(map.returnPointerMap());
 	Pipes pipes(&map);
 
 	while (1) {
@@ -24,10 +23,8 @@ int main() {
 		bird.fall();
 		bird.fly();
 		pipes.makePipes();
-		map.placePixel(bird.x, bird.y, 45);
+		map.placePixel(bird.x, bird.y, 43);
 
-		//map.display();
-		std::cout << "\n";
 		display.displayPrint();
 		display.displayClear();
 

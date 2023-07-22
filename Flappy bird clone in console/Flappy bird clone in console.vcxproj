@@ -134,6 +134,7 @@
     <ClInclude Include="Display.h" />
     <ClInclude Include="Fps.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Pipe.h" />
     <ClInclude Include="Pipes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -10,8 +10,10 @@ class Bird {
 	std::chrono::time_point<std::chrono::high_resolution_clock> timeStart;
 
 	float velocity;
-	float MAX_VELOCITY = 1;
+	float MAX_VELOCITY;
 	bool isSpacePressed;
+	float fallAcceleration;
+	float jumpPower;
 	
 public:
 	float x;
@@ -20,6 +22,9 @@ public:
 	Bird(std::vector<std::vector<int>>* m) : matrix(m) {
 		velocity = 0;
 		isSpacePressed = 0;
+		MAX_VELOCITY = 1;
+		fallAcceleration = 0.2;
+		jumpPower = 5;
 		x = 5;
 		y = 5;
 
@@ -28,7 +33,7 @@ public:
 
 	void fall() {
 		if (velocity < MAX_VELOCITY) {
-			velocity += 0.1;
+			velocity += fallAcceleration;
 		}
 		if (velocity > MAX_VELOCITY) {
 			velocity = MAX_VELOCITY;
@@ -49,7 +54,6 @@ public:
 	}
 
 	void fly() {
-		std::cout << velocity << "\n" << x << " " << y;
 		isSpacePressed = GetAsyncKeyState(VK_SPACE) & 0x8000;
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
@@ -57,7 +61,7 @@ public:
 
 		if (deltaTime >= 100) {
 				if (isSpacePressed && y > 6) {
-					velocity -= 3;
+					velocity -= jumpPower;
 				}
 
 			timeStart = currentTime;
