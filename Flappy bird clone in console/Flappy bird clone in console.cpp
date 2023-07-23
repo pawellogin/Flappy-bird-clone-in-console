@@ -6,7 +6,7 @@
 #include <thread>
 
 int main() {
-	const int HEIGHT = 30;
+	const int HEIGHT = 29;
 	const int WIDTH = 50;
 
 	int score = 0;
@@ -32,9 +32,11 @@ int main() {
 		}
 		map.placePixel(bird.x, bird.y, 43);
 
-		std::cout <<"Score: "<< score<<"\n";
+
+		std::cout << "Score: " << score<<std::endl;
 		display.displayPrint();
 		display.displayClear();
+
 
 		map.clear();
 	}
